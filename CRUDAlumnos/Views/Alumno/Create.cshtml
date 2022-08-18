@@ -1,0 +1,152 @@
+﻿@model CRUDAlumnos.Models.Alumno
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<h1>Crear Alumnos</h1>
+
+<h4>Alumno</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" id="Nombre" name="Nombre" class="form-control" type="text" minlength="3" onkeypress="return /[a-zåäö ]/i.test(event.key)" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApellidoPaterno" class="control-label"></label>
+                <input asp-for="ApellidoPaterno" class="form-control" type="text" minlength="3" onkeypress="return /[a-zåäö ]/i.test(event.key)"/>
+                <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApellidoMaterno" class="control-label"></label>
+                <input asp-for="ApellidoMaterno" class="form-control" type="text" minlength="3" onkeypress="return /[a-zåäö ]/i.test(event.key)"/>
+                <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaNacimiento" class="control-label"></label>
+                <input asp-for="FechaNacimiento" class="form-control"  />
+                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sexo" class="control-label"></label>
+                <select asp-for="Sexo" name="Sexo" class="form-control">
+                    <option value="Masculino" selected>Masculino</option>
+                    <option value="Femenino" >Femenino</option>
+                </select>
+                @*<input asp-for="Sexo" class="form-control"  />*@
+                <span asp-validation-for="Sexo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_GradoEstudios" class="control-label"> Grado de Estudios</label>
+                @*<input asp-for="Id_GradoEstudios" class="form-control" />*@
+                 <select asp-for="Id_GradoEstudios" name="Id_GradoEstudios" class="form-control">
+                    <option value="1" >Primaria</option>
+                    <option value="2" >Secundaria</option>
+                    <option value="3" >Preparatoria</option>
+                    <option value="4" >Universidad</option>
+                    <option value="5" >Maestria o superior</option>
+                </select>
+                <span asp-validation-for="Id_GradoEstudios" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" type="text" maxlength="10" required autocomplete="off" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" min="1"/>
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="submit btn btn-primary" disabled />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar a la lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+          $("#Create").validate({
+            rules: {
+              Nombre : {
+                required: true,
+                minlength: 3
+              },
+              ApellidoPaterno : {
+                required: true,
+                minlength: 3
+              },
+              ApellidoMaterno : {
+                required: true,
+                minlength: 3
+              },
+              Telefono : {
+                required: true,
+                minlength: 10,
+                maxlength: 10,
+              },
+              FechaNacimiento: {
+                required: true,
+              },
+              Id_GradoEstudios: {
+                required: true,
+              },
+              Email: {
+                required: true,
+                email: true
+              },
+              weight: {
+                required: {
+                  depends: function(elem) {
+                    return $("#age").val() > 50
+                  }
+                },
+                number: true,
+                min: 0
+              }
+            },
+            messages : {
+              name: {
+                minlength: "Name should be at least 3 characters"
+              },
+              age: {
+                required: "Please enter your age",
+                number: "Please enter your age as a numerical value",
+                min: "You must be at least 18 years old"
+              },
+              email: {
+                email: "The email should be in the format: abc@domain.tld"
+              },
+              weight: {
+                required: "People with age over 50 have to enter their weight",
+                number: "Please enter your weight as a numerical value"
+              }
+            },
+            submitHandler: function(form) {
+                console.log(form);// <- pass 'form' argument in
+            $(".submit").attr("disabled", true);
+            form.submit(); // <- use 'form' argument here.
+              }
+          });
+
+            $("#Nombre,#ApellidoPaterno,#ApellidoMaterno,#Telefono,#FechaNacimiento,#Id_GradoEstudios,#Email").on("blur", function() {
+                if ($("#Create").valid()) {
+                    $(".submit").removeAttr("disabled");
+                }
+            });
+        });
+    </script>
+}
